@@ -125,14 +125,12 @@ let betterMean = (/) <!> sum <*> count
 let resumedBetterMean = extend (fun fld -> foldList fld [51.0]) betterMean
 // foldList resumedBetterMean [0.0 .. 100.0]
 
-// More examples:
-let sumSquaredDiffs m = mapBefore (fun x -> (x - m) ** 2.0) sum
-let countMinusOne = mapAfter (fun x -> x-1.0) count
-let variance xs = 
-    let mean = foldList betterMean xs
-    let var = (/) <!> sumSquaredDiffs mean <*> countMinusOne
-    foldList var xs
-
+// Another example: computing population Variance as a resumable Fold
+// Var(X) = E(X^2) - E(X)^2
+let meanSquares = mapBefore (fun x -> x ** 2.0) betterMean
+let squaredMean = mapAfter (fun x -> x ** 2.0) betterMean
+let variance = (-) <!> meanSquares <*> squaredMean 
+// foldList variance [0.0 .. 100.0]
 
 
 // Appendix: Laws for Resumable Folds, with equational proofs
